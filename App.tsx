@@ -10,10 +10,11 @@ import {AppProvider, useAuth} from './store';
 import {AuthenticatedApp} from './AuthenticatedApp';
 import {Login} from './pages/login';
 import {View} from 'react-native';
+import { getToken } from './utils/auth';
 
 const Store = () => {
   const context = useAuth();
-  console.log(context?.user);
+  console.log(getToken());
 
   return (
     <View style={{flex: 1}}>

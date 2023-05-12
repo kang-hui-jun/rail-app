@@ -3,33 +3,46 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   ImageBackground,
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
-import {useAuth} from '../../store';
 import {LoginForm} from '../../types/login-form';
 import config from '../../utils/config';
-import { getInfo } from '../../api/get-info';
+import {getInfo} from '../../api/get-info';
+import {login} from '../../utils/auth';
+import {useAuth} from '../../store';
 
 const title = config.appName;
 const image = {uri: config.apiUrl + '/imgs/login_bg.png'};
 const logo = {uri: config.apiUrl + '/imgs/logo.png'};
 
 export const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const context = useAuth();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<any>({
     username: 'admin',
     password: 'admin123',
   });
 
-  const handleLogin = async (form: LoginForm) => {
+  const handleLogin = async (formData: LoginForm) => {
+    const isTrue = Object.keys(form).every((item: string) => form[item]);
+    if (!isTrue) {
+      Alert.alert('', '请输入用户名和密码');
+      return false;
+    }
+
     try {
-      await context?.login(form);
-      await getInfo()
-    } catch (error) {}
+      setIsLoading(true);
+      await login(formData);
+      await context?.getUser();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,7 +69,9 @@ export const Login = () => {
         />
 
         <TouchableOpacity style={styles.btn} onPress={() => handleLogin(form)}>
-          <Text style={{color: '#3B80F0', textAlign: 'center'}}>登 录</Text>
+          <Text style={{color: '#3B80F0', textAlign: 'center'}}>
+            {isLoading ? '登录中...' : '登录'}
+          </Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>
@@ -88,6 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   inp: {
+    height: 40,
     width: 300,
     padding: 12,
     color: '#FFF',
@@ -96,6 +112,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   btn: {
+    height: 40,
     backgroundColor: '#FFF',
     padding: 12,
     width: 300,

@@ -1,10 +1,9 @@
 import React, {ReactNode, useContext, useState} from 'react';
-import {LoginForm} from '../types/login-form';
 import {User} from '../types/user';
-import * as auth from '../utils/auth';
+import { getInfo } from '../api/get-info';
 
 type Auth = {
-  login: (form: LoginForm) => Promise<void>;
+  getUser: () => Promise<void>;
   user: User | null;
 };
 
@@ -12,9 +11,9 @@ const AuthContext = React.createContext<Auth | undefined>(undefined);
 
 export const AppProvider = ({children}: {children: ReactNode}) => {
   const [user, setUser] = useState(null);
-  const login = (form: LoginForm) => auth.login(form).then(setUser);
+  const getUser = () => getInfo().then(setUser);
 
-  return <AuthContext.Provider value={{user, login}} children={children} />;
+  return <AuthContext.Provider value={{user, getUser}} children={children} />;
 };
 
 export const useAuth = () => {
