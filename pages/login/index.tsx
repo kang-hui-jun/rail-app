@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {LoginForm} from '../../types/login-form';
 import config from '../../utils/config';
-import {getInfo} from '../../api/get-info';
 import {login} from '../../utils/auth';
 import {useAuth} from '../../store';
 

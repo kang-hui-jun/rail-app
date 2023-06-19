@@ -7,8 +7,9 @@ import {Warehouse} from './pages/warehouse';
 import {Emergency} from './pages/emergency';
 import {Detail as InspectionDetail} from './pages/inspection/Detail';
 import {Text, TouchableOpacity} from 'react-native';
-import { AddInspection } from './pages/inspection/AddInspection';
-import {Detail as TaskDetail} from './pages/task/Detail'
+import {AddInspection} from './pages/inspection/AddInspection';
+import {Detail as TaskDetail} from './pages/task/Detail';
+import AddTask from './pages/task/AddTask';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,9 +50,24 @@ export const AuthenticatedApp = () => {
           component={InspectionDetail}
         />
         <Stack.Screen
-          options={{headerTitleAlign: 'center'}}
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('创建作业');
+                }}>
+                <Text style={{fontSize: 16}}>新建作业</Text>
+              </TouchableOpacity>
+            ),
+          })}
           name="作业管理"
           component={Task}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="创建作业"
+          component={AddTask}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
@@ -68,7 +84,6 @@ export const AuthenticatedApp = () => {
           name="应急抢修"
           component={Emergency}
         />
-        
       </Stack.Navigator>
     </NavigationContainer>
   );

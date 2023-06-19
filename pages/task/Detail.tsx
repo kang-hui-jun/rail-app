@@ -9,8 +9,8 @@ import React, {useEffect, useState} from 'react';
 import {getTaskDetail} from '../../api/task';
 import config from '../../utils/config';
 import {Info} from './component/Info';
-import { Group } from './component/Group';
-import { Disease } from './component/Disease';
+import {Group} from './component/Group';
+import {Disease} from './component/Disease';
 
 const image = {
   uri: config.apiUrl + '/imgs/inspection/detail.png',
@@ -20,7 +20,7 @@ const image = {
 export const Detail = ({route, navigation}) => {
   const params = route.params;
   const [active, setActive] = useState(0);
-  const [tabs] = useState(['基本信息', '作业小组', '告警记录', '维养病害']);
+  const [tabs] = useState(['基本信息', '作业小组', '维养病害']);
   const [detail, setDetail] = useState<any>({});
 
   const getDetail = () => {
@@ -78,12 +78,11 @@ export const Detail = ({route, navigation}) => {
       <View style={{flex: 1, backgroundColor: '#eee', paddingTop: 10}}>
         {active === 0 && <Info detail={detail} />}
         {active === 1 && <Group detail={detail} />}
-        {active === 2 && <Info detail={detail} />}
         {active === 3 && <Disease detail={detail} />}
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => {}}>
-        <Text style={styles.btn}>工场清单</Text>
+        <Text style={styles.btn}>结束作业</Text>
       </TouchableOpacity>
     </View>
   );

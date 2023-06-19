@@ -40,6 +40,7 @@ const renderMenu = (item: Menu, navigation) => {
     <TouchableHighlight
       style={styles.menu}
       key={item.path}
+      underlayColor='white'
       onPress={() => navigation.navigate(item.title)}>
       <View>
         <Image

@@ -37,3 +37,9 @@ export const updateSignature = <T extends Params>(data: T) => {
 // 查询是否有遗漏工器具
 export const getWorkForFinish = (id: number) =>
   request('/planWork/getWorkForFinish/' + id);
+
+// 查询所有作业类型
+export const getAllType = () =>
+  request('/planType/getAll', {
+    method: 'post',
+  });

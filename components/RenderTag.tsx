@@ -1,64 +1,76 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 
-const renderTag = (status: number) => {
+export const renderTag = (status: number) => {
   switch (status) {
     case 0:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#f29769'}}>已制定</Text>
+        <View style={{backgroundColor: '#f29769'}}>
+          <Text style={{...styles.tag}}>已制定</Text>
+        </View>
       );
 
     case 1:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#f29769'}}>已发布</Text>
+        <View style={{backgroundColor: '#f29769'}}>
+          <Text style={{...styles.tag}}>已发布</Text>
+        </View>
       );
 
     case 2:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#f29769'}}>已执行</Text>
+        <View style={{backgroundColor: '#f29769'}}>
+          <Text style={{...styles.tag}}>已执行</Text>
+        </View>
       );
 
     case 3:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#FF4D4F'}}>已取消</Text>
+        <View style={{backgroundColor: '#FF4D4F'}}>
+          <Text style={{...styles.tag}}>已取消</Text>
+        </View>
       );
 
     case 4:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#bg4781e1'}}>
-          已分组
-        </Text>
+        <View style={{backgroundColor: '#bg4781e1'}}>
+          <Text style={{...styles.tag}}>已分组</Text>
+        </View>
       );
 
     case 5:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#bg4781e1'}}>
-          已领用
-        </Text>
+        <View style={{backgroundColor: '#bg4781e1'}}>
+          <Text style={{...styles.tag}}>已领用</Text>
+        </View>
       );
 
     case 6:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#bg4781e1'}}>
-          已下线
-        </Text>
+        <View style={{backgroundColor: '#bg4781e1'}}>
+          <Text style={{...styles.tag}}>已下线</Text>
+        </View>
       );
 
     case 7:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#bg4781e1'}}>
-          已归还
-        </Text>
+        <View style={{backgroundColor: '#bg4781e1'}}>
+          <Text style={{...styles.tag}}>已归还</Text>
+        </View>
       );
 
     case 8:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#FF4D4F'}}>已结束</Text>
+        <View style={{backgroundColor: '#FF4D4F'}}>
+          <Text style={{...styles.tag}}>已结束</Text>
+        </View>
       );
 
     case 10:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#f29769'}}>已开始</Text>
+        <View style={{backgroundColor: '#f29769'}}>
+          <Text style={{...styles.tag}}>已开始</Text>
+        </View>
       );
 
     default:
@@ -67,11 +79,7 @@ const renderTag = (status: number) => {
 };
 
 export default function RenderTag({status}: {status: number}) {
-  return (
-    <View>
-        {renderTag(status)}
-    </View>
-  );
+  return <View>{renderTag(status)}</View>;
 }
 
 const styles = StyleSheet.create({

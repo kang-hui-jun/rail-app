@@ -12,6 +12,7 @@ export type Task = {
     id: number;
     groupName: string;
     leaderName: string;
+    status: number;
   }[];
   diseaseList: {
     id: number;
@@ -26,3 +27,8 @@ export type Task = {
     mileage: string;
   }[];
 };
+
+export type TaskType = {
+  id: number;
+  type: string;
+}
