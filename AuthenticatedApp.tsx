@@ -10,6 +10,7 @@ import {Text, TouchableOpacity} from 'react-native';
 import {AddInspection} from './pages/inspection/AddInspection';
 import {Detail as TaskDetail} from './pages/task/Detail';
 import AddTask from './pages/task/AddTask';
+import GroupDetail from './pages/task/component/GroupDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,11 @@ export const AuthenticatedApp = () => {
           options={{headerTitleAlign: 'center'}}
           name="作业详情"
           component={TaskDetail}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="小组详情"
+          component={GroupDetail}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}

@@ -18,7 +18,7 @@ export const Info = ({detail}: {detail: any}) => {
         <Text>{ detail.pinName }</Text>
       </View>
       <View style={styles.item}>
-        <Text>负责人人：</Text>
+        <Text>负责人：</Text>
         <Text>{ detail.leaderPersonName }</Text>
       </View>
       <View style={styles.item}>

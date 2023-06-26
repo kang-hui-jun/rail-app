@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, {useState} from 'react';
-import TypeModal from './TypeModal';
+import TypeModal, { T } from './TypeModal';
 
 interface Props {
   setActive: (active: number) => void;
@@ -56,9 +56,14 @@ export default function TaskInfo({setActive}: Props) {
     setModalVisible(false);
   };
 
-  const confirm = () => {
-
-  }
+  const confirm = (param: T[]) => {
+    console.log(param);
+    setForm({
+      ...form,
+      typeList: param
+    })
+    setModalVisible(false)
+  };
 
   const save = () => {
     console.log('保存');
@@ -114,7 +119,7 @@ export default function TaskInfo({setActive}: Props) {
             style={{flex: 1}}
             onPress={() => setModalVisible(true)}>
             <Text style={{color: '#ccc'}}>
-              {form.typeList.length || '请选择'}
+              {form.typeList.length && form.typeList.map(item => item.type).join(',') || '请选择'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -213,19 +218,23 @@ export default function TaskInfo({setActive}: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-              style={{
-                ...styles.btn,
-                backgroundColor: '#3B80F0',
-              }}
-              onPress={() => {
-                next();
-              }}>
-              <Text style={{color: '#FFFFFF'}}>下一步</Text>
-            </TouchableOpacity>
+            style={{
+              ...styles.btn,
+              backgroundColor: '#3B80F0',
+            }}
+            onPress={() => {
+              next();
+            }}>
+            <Text style={{color: '#FFFFFF'}}>下一步</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
-      <TypeModal modalVisible={modalVisible} closeModal={closeModal} confirm={confirm} />
+      <TypeModal
+        modalVisible={modalVisible}
+        closeModal={closeModal}
+        confirm={confirm}
+      />
     </View>
   );
 }

@@ -1,26 +1,35 @@
 import {View, Text, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import CheckBox from '@react-native-community/checkbox';
 import {getAllType} from '../../api/task';
-import { TaskType } from '../../types/task';
+import {TaskType} from '../../types/task';
+
+export interface T extends TaskType {
+  toggleCheckBox: boolean;
+}
 
 interface Props {
   modalVisible: boolean;
   closeModal: () => void;
-  confirm: () => void
+  confirm: (param: T[]) => void;
 }
 
 export default function TypeModal({modalVisible, closeModal, confirm}: Props) {
-  const [data, setData] = useState<TaskType[]>([]);
+  const [data, setData] = useState<T[]>([]);
+  // const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const getTypeList = () => {
     getAllType().then(res => {
-      setData(res.data);
-      
+      const result = res.data.map((item: T) => ({
+        ...item,
+        toggleCheckBox: false,
+      }));
+      setData(result);
     });
   };
 
   useEffect(() => {
-    getTypeList()
-  }, [])
+    getTypeList();
+  }, []);
 
   return (
     <Modal
@@ -34,16 +43,28 @@ export default function TypeModal({modalVisible, closeModal, confirm}: Props) {
       <View style={styles.overlay}>
         <View style={styles.optionsContainer}>
           <View style={styles.list}>
-            {data?.map(item => (
+            {data?.map((item, index) => (
               <View key={item.id}>
-                <View
+                <TouchableOpacity
                   style={{
                     height: 50,
-                    // alignItems: 'center',
-                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    // justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    const newData = [...data];
+                    newData[index].toggleCheckBox =
+                      !newData[index].toggleCheckBox;
+                    setData(newData);
                   }}>
+                  <CheckBox
+                    disabled={false}
+                    value={item.toggleCheckBox}
+                    // onValueChange={newValue => setToggleCheckBox(newValue)}
+                  />
                   <Text>{item.type}</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.divider}></View>
               </View>
             ))}
@@ -67,7 +88,7 @@ export default function TypeModal({modalVisible, closeModal, confirm}: Props) {
                 backgroundColor: '#3B80F0',
               }}
               onPress={() => {
-                confirm();
+                confirm(data.filter(item => item.toggleCheckBox));
               }}>
               <Text style={{color: '#FFFFFF'}}>确定</Text>
             </TouchableOpacity>

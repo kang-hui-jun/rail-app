@@ -35,7 +35,10 @@ export const Login = () => {
 
     try {
       setIsLoading(true);
-      await login(formData);
+      const msg = await login(formData);
+      if (!msg) {
+        return false;
+      }
       await context?.getUser();
     } catch (error) {
       console.log(error);

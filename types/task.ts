@@ -1,3 +1,17 @@
+export type Person = {
+  id: number;
+  personId: number;
+  personName: string;
+};
+
+export type Group = {
+  id: number;
+  groupName: string;
+  leaderName: string;
+  status: number;
+  personList: Person[]
+};
+
 export type Task = {
   id: number;
   name: string;
@@ -8,12 +22,7 @@ export type Task = {
   leaderPersonName: string;
   pinName: string;
   workContent: string;
-  groupList: {
-    id: number;
-    groupName: string;
-    leaderName: string;
-    status: number;
-  }[];
+  groupList: Group[];
   diseaseList: {
     id: number;
     diseaseMouldName: string;
@@ -25,10 +34,10 @@ export type Task = {
     travelTypeName: string;
     workAreaName: string;
     mileage: string;
-  }[];
+  };
 };
 
 export type TaskType = {
   id: number;
   type: string;
-}
+};

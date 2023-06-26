@@ -77,7 +77,7 @@ export const Detail = ({route, navigation}) => {
 
       <View style={{flex: 1, backgroundColor: '#eee', paddingTop: 10}}>
         {active === 0 && <Info detail={detail} />}
-        {active === 1 && <Group detail={detail} />}
+        {active === 1 && <Group detail={detail} navigation={navigation} />}
         {active === 3 && <Disease detail={detail} />}
       </View>
 
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: '#FFF',
+    paddingBottom: 80
   },
   bg: {
     width: '100%',

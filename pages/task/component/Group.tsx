@@ -1,66 +1,55 @@
-import {StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
-import {Task} from '../../../types/task';
+import {StyleSheet, Text, View, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {Task, Group as G} from '../../../types/task';
 import config from '../../../utils/config';
-import { renderTag } from '../../../components/RenderTag';
+import RenderTag from '../../../components/RenderTag';
+import GroupCard from './GroupCard';
 
 const image = {
   uri: config.apiUrl + '/imgs/task/avatar.png',
 };
 
-export const Group = ({detail}: {detail: Task}) => {
+interface Props {
+  detail: Task;
+  navigation: any;
+}
+
+export const Group = ({detail, navigation}: Props) => {
+  const handleDetail = (param: G) => {
+    navigation.navigate('小组详情', {
+      ...param,
+    });
+  };
+
   return (
     <View style={styles.page}>
-      {detail?.groupList?.map(item => (
-        <View style={styles.li} key={item.id}>
-          <View style={styles.header}>
-            <Text>{item.groupName}</Text>
-            {
-              renderTag(item.status)
-            }
-          </View>
-          <View style={styles.divider}></View>
-          <View style={styles.person}>
-            <View style={styles.leader}>
-              <Image style={styles.img} source={image} />
-              <Text>{item.leaderName}</Text>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.cards}>
-              <View style={styles.card}>
-                <Text style={styles.font}>打卡</Text>
+      <ScrollView>
+        {detail?.groupList?.map(item => (
+          <View style={styles.li} key={item.id}>
+            <TouchableOpacity style={styles.header} onPress={() => handleDetail(item)}>
+              <Text>{item.groupName}</Text>
+              <RenderTag status={item.status} />
+            </TouchableOpacity>
+            <View style={styles.divider}></View>
+            <View style={styles.person}>
+              <View style={styles.leader}>
+                <Image style={styles.img} source={image} />
+                <Text>{item.leaderName}</Text>
               </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>领用</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>二次领用</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>出清</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>清点归还</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>遗留物品登记</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>结束小组作业</Text>
-              </View>
-
-              <View style={styles.card}>
-                <Text style={styles.font}>拍照</Text>
+              <View style={styles.line}></View>
+              <View style={styles.cards}>
+                <GroupCard status={item.status} title="打卡" />
+                <GroupCard status={item.status} title="领用" />
+                <GroupCard status={item.status} title="二次领用" />
+                <GroupCard status={item.status} title="出清" />
+                <GroupCard status={item.status} title="清点归还" />
+                <GroupCard status={item.status} title="遗留物品登记" />
+                <GroupCard status={item.status} title="结束小组作业" />
+                <GroupCard status={item.status} title="拍照" />
               </View>
             </View>
           </View>
-        </View>
-      ))}
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -68,10 +57,12 @@ export const Group = ({detail}: {detail: Task}) => {
 const styles = StyleSheet.create({
   page: {
     gap: 20,
+    flex: 1,
   },
   li: {
     padding: 20,
     backgroundColor: '#FFF',
+    marginBottom: 10,
   },
   header: {
     flexDirection: 'row',
@@ -109,17 +100,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 5,
     alignItems: 'center',
-  },
-  card: {
-    width: 65,
-    height: 90,
-    backgroundColor: 'grey',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 2,
-  },
-  font: {
-    color: '#FFF',
   },
   cardBg: {
     width: 60,

@@ -1,4 +1,4 @@
-import {View, Text, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, ImageBackground, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import config from '../../utils/config';
 import TaskInfo from './TaskInfo';
