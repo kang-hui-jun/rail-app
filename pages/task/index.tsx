@@ -14,6 +14,7 @@ import RenderTag from '../../components/RenderTag';
 // @ts-ignore
 export const Task = ({navigation}) => {
   const [data, setData] = useState<DataType[]>([]); // 列表数据
+  const [total, setTotal] = useState(0)
   const [refreshing, setRefreshing] = useState(false); // 刷新状态
   const [isLoading, setIsLoading] = useState(false); // 加载更多状态
   const [params, setParams] = useState({
@@ -27,6 +28,7 @@ export const Task = ({navigation}) => {
     // 发送网络请求获取数据
     try {
       const response = await getTaskList(params);
+      setTotal(response.total)
 
       // 根据请求结果更新数据
       if (params.index === 1) {
@@ -55,7 +57,7 @@ export const Task = ({navigation}) => {
 
   // 上拉加载更多回调函数
   const handleLoadMore = () => {
-    if (!isLoading) {
+    if (!isLoading && data.length < total) {
       setParams(p => ({
         ...params,
         index: p.index + 1,

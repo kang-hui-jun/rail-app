@@ -57,7 +57,6 @@ export default function TaskInfo({setActive}: Props) {
   };
 
   const confirm = (param: T[]) => {
-    console.log(param);
     setForm({
       ...form,
       typeList: param

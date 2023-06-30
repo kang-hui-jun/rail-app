@@ -14,6 +14,7 @@ const RefreshableList = <T extends { id: string | number }>({
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
     fetchInitialData();

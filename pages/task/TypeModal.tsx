@@ -33,7 +33,7 @@ export default function TypeModal({modalVisible, closeModal, confirm}: Props) {
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {

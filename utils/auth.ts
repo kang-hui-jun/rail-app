@@ -46,6 +46,7 @@ export const login = (form: LoginForm) => {
       }
       Alert.alert('', data.msg);
     } else {
+      Alert.alert('', "后端接口连接异常");
       return Promise.reject(await res.json());
     }
   });
