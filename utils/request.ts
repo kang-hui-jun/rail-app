@@ -1,5 +1,6 @@
 import {Alert} from 'react-native';
 import qs from 'qs';
+import RNRestart from 'react-native-restart';
 import {deleteToken, getData, getToken} from './auth';
 import config from './config';
 
@@ -35,6 +36,7 @@ export const request = async (
     switch (response.status) {
       case 401:
         Alert.alert('', '登录状态已过期，请重新登录');
+        RNRestart.Restart();
         break;
 
       case 403:
