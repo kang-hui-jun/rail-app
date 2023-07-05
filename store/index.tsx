@@ -11,7 +11,9 @@ const AuthContext = React.createContext<Auth | undefined>(undefined);
 
 export const AppProvider = ({children}: {children: ReactNode}) => {
   const [user, setUser] = useState(null);
-  const getUser = () => getInfo().then(setUser);
+  const getUser = () => getInfo().then(res => {
+    setUser(res.user)
+  });
 
   return <AuthContext.Provider value={{user, getUser}} children={children} />;
 };

@@ -11,6 +11,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, {useState} from 'react';
 import TypeModal, { T } from './TypeModal';
+import { CreateTask } from '../../types/task';
 
 interface Props {
   setActive: (active: number) => void;
@@ -36,7 +37,7 @@ export default function TaskInfo({setActive}: Props) {
     });
   };
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CreateTask<any>>({
     name: '',
     num: '',
     typeList: [],

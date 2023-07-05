@@ -114,7 +114,9 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '80%',
   },
-  list: {flex: 1},
+  list: {
+    flex: 1,
+  },
   divider: {
     height: 1,
     backgroundColor: '#F0F1F3',

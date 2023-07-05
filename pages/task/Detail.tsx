@@ -13,7 +13,6 @@ import {Info} from './component/Info';
 import {Group} from './component/Group';
 import {Disease} from './component/Disease';
 import SignatureCapture from 'react-native-signature-capture';
-import {request} from '../../utils/request';
 
 const image = {
   uri: config.apiUrl + '/imgs/inspection/detail.png',
@@ -49,7 +48,6 @@ export const Detail = ({route, navigation}) => {
 
   const _onSaveEvent = (result: any) => {
     const signatureURI = result.encoded;
-
     
   };
   const _onDragEvent = () => {

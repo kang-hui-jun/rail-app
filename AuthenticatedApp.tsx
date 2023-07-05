@@ -11,19 +11,41 @@ import {AddInspection} from './pages/inspection/AddInspection';
 import {Detail as TaskDetail} from './pages/task/Detail';
 import AddTask from './pages/task/AddTask';
 import GroupDetail from './pages/task/component/GroupDetail';
+import {Login} from './pages/login';
+import {navigationRef} from './utils/navigation';
+import Notice from './pages/notice';
+import Set from './pages/set';
+import Label from './pages/set/Label';
+import Temperature from './pages/set/Temperature';
+import NoticeDetail from './pages/notice/NoticeDetail';
+import MyTask from './pages/my-task';
 
 const Stack = createNativeStackNavigator();
 
 export const AuthenticatedApp = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="登录"
+          component={Login}
+        />
         <Stack.Screen
           options={{
             headerShown: false,
           }}
           name="首页"
           component={Home}
+        />
+        <Stack.Screen
+          options={{
+            headerTitleAlign: 'center',
+          }}
+          name="我的工作"
+          component={MyTask}
         />
         <Stack.Screen
           options={({navigation}) => ({
@@ -89,6 +111,31 @@ export const AuthenticatedApp = () => {
           options={{headerTitleAlign: 'center'}}
           name="应急抢修"
           component={Emergency}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="事务通知"
+          component={Notice}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="通知详情"
+          component={NoticeDetail}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="设置"
+          component={Set}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="标签监测"
+          component={Label}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="体温枪设置"
+          component={Temperature}
         />
       </Stack.Navigator>
     </NavigationContainer>

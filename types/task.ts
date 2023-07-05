@@ -9,7 +9,7 @@ export type Group = {
   groupName: string;
   leaderName: string;
   status: number;
-  personList: Person[]
+  personList: Person[];
 };
 
 export type Disease = {
@@ -23,7 +23,7 @@ export type Disease = {
   travelTypeName: string;
   workAreaName: string;
   mileage: string;
-}
+};
 
 export type Task = {
   id: number;
@@ -36,10 +36,26 @@ export type Task = {
   pinName: string;
   workContent: string;
   groupList: Group[];
-  diseaseList: Disease[]
+  diseaseList: Disease[];
 };
 
 export type TaskType = {
   id: number;
   type: string;
+};
+
+export type CreateTask<T> = {
+  name: string;
+  num: string;
+  typeList: T[];
+  lineId: string;
+  pleaseStand: string;
+  pinStand: string;
+  workAddr: string;
+  leaderPerson: string;
+  safePerson: string;
+  dateTime: string;
+  workTime: string;
+  deptId: string;
+  workContent: string;
 };

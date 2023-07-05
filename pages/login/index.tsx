@@ -18,7 +18,8 @@ const title = config.appName;
 const image = {uri: config.apiUrl + '/imgs/login_bg.png'};
 const logo = {uri: config.apiUrl + '/imgs/logo.png'};
 
-export const Login = () => {
+// @ts-ignore
+export const Login = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const context = useAuth();
   const [form, setForm] = useState<any>({
@@ -40,6 +41,7 @@ export const Login = () => {
         return false;
       }
       await context?.getUser();
+      navigation.navigate('首页');
     } catch (error) {
       console.log(error);
     } finally {
