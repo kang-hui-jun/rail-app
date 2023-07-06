@@ -1,12 +1,43 @@
-import {View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Divider from '../../components/Divider';
+import {getLine} from '../../api/line';
+import {Line} from '../../types/line';
+import Picker from '../../components/Picker';
+import {getDept} from '../../api/dept';
+import {treeToArray} from '../../utils';
+import {Dept} from '../../types/dept';
+import {getInspectionType} from '../../api/inspection';
+import {InspectionType} from '../../types/inspection';
+import {getPerson} from '../../api/person';
+import {Person} from '../../types/person';
+import TreePicker from '../../components/TreePicker';
 
 export function AddInspection() {
   const [isDatePicker, setIsDatePicker] = useState(false);
+  const [open, setOpen] = useState({
+    line: false,
+    dept: false,
+    inspection: false,
+    inspectionLeader: false,
+    person: false,
+    personList: false,
+  });
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
+  const [line, setLine] = useState<Line[]>([]);
+  const [dept, setDept] = useState<Omit<Dept, 'children'>[]>([]);
+  const [inspectionType, setInspectionType] = useState<InspectionType[]>([]);
+  const [person, setPerson] = useState<Person[]>([]);
+  const [personName, setPersonName] = useState('');
 
   const [form, setForm] = useState({
     name: '',
@@ -33,6 +64,54 @@ export function AddInspection() {
       ...form,
       inspectionDate,
     });
+  };
+
+  useEffect(() => {
+    getLine().then(res => {
+      setLine(res.data || []);
+    });
+
+    getDept().then(res => {
+      setDept(treeToArray(res.data));
+    });
+
+    getInspectionType().then(res => {
+      setInspectionType(res.data);
+    });
+
+    getPerson().then(res => {
+      setPerson(res.data);
+    });
+  }, []);
+
+  const lineChange = (item: Line) => {
+    setForm({...form, lineId: item.id});
+  };
+
+  const deptChange = (item: Omit<Dept, 'children'>) => {
+    setForm({...form, deptId: item.id});
+  };
+
+  const inspectionChange = (item: InspectionType) => {
+    setForm({
+      ...form,
+      inspectionTypeId: item.id,
+    });
+  };
+
+  const inspectionLeaderChange = (item: Person) => {
+    setForm({...form, inspectionLeader: item.id});
+  };
+
+  const personChange = (item: {ids: string[]; names: string}) => {
+    // setForm({...form, personList: item});
+    console.log(item);
+    setForm({...form, personList: item.ids});
+    setPersonName(item.names);
+  };
+
+  const submit = () => {
+    console.log(form);
   };
 
   return (
@@ -62,27 +141,51 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>线路</Text>
-          <TextInput
+          <TouchableOpacity
             style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
+            onPress={() => setOpen({...open, line: true})}>
+            <Text
+              style={{
+                color: line?.find(item => item.id === form.lineId)?.lineName
+                  ? '#000'
+                  : '#CCC',
+              }}>
+              {line?.find(item => item.id === form.lineId)?.lineName ||
+                '请选择'}
+            </Text>
+          </TouchableOpacity>
+
+          <Picker
+            visible={open.line}
+            close={() => setOpen({...open, line: false})}
+            data={line.map(item => ({...item, name: item.lineName}))}
+            change={lineChange}
           />
         </View>
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>巡检部门</Text>
-          <TextInput
+          <TouchableOpacity
             style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
+            onPress={() => setOpen({...open, dept: true})}>
+            <Text
+              style={{
+                color: dept?.find(item => item.id === form.deptId)?.label
+                  ? '#000'
+                  : '#CCC',
+              }}>
+              {dept?.find(item => item.id === form.deptId)?.label || '请选择'}
+            </Text>
+          </TouchableOpacity>
+          <Picker
+            visible={open.dept}
+            close={() => setOpen({...open, dept: false})}
+            data={dept.map(item => ({...item, name: item.label}))}
+            change={deptChange}
           />
         </View>
 
@@ -101,28 +204,44 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>巡检类型</Text>
-          <TextInput
+
+          <TouchableOpacity
             style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
+            onPress={() => setOpen({...open, inspection: true})}>
+            <Text
+              style={{
+                color: inspectionType?.find(
+                  item => item.id === form.inspectionTypeId,
+                )?.name
+                  ? '#000'
+                  : '#ccc',
+              }}>
+              {inspectionType?.find(item => item.id === form.inspectionTypeId)
+                ?.name || '请选择'}
+            </Text>
+          </TouchableOpacity>
+          <Picker
+            visible={open.inspection}
+            close={() => setOpen({...open, inspection: false})}
+            data={inspectionType}
+            change={inspectionChange}
           />
         </View>
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>巡检日期</Text>
-          <TextInput
-            style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
-          />
+
+          <TouchableOpacity
+            style={{flex: 1}}
+            onPress={() => setIsDatePicker(true)}>
+            <Text style={{color: form.inspectionDate ? '#000' : '#ccc'}}>
+              {form.inspectionDate || '请选择'}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <Divider />
@@ -153,27 +272,50 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>负责人</Text>
-          <TextInput
+
+          <TouchableOpacity
             style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
+            onPress={() => setOpen({...open, inspectionLeader: true})}>
+            <Text
+              style={{
+                color: person?.find(item => item.id === form.inspectionLeader)
+                  ?.name
+                  ? '#000'
+                  : '#ccc',
+              }}>
+              {person?.find(item => item.id === form.inspectionLeader)?.name ||
+                '请选择'}
+            </Text>
+          </TouchableOpacity>
+          <Picker
+            visible={open.inspectionLeader}
+            close={() => setOpen({...open, inspectionLeader: false})}
+            data={person}
+            change={inspectionLeaderChange}
           />
         </View>
 
         <Divider />
 
-        <View style={styles.formItem}>
+        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>巡检人</Text>
-          <TextInput
+
+          <TouchableOpacity
             style={styles.inp}
-            placeholder="请输入"
-            placeholderTextColor="#ccc"
-            onChangeText={v => setForm({...form, name: v})}
-            value={form.name}
+            onPress={() => setOpen({...open, personList: true})}>
+            <Text style={{color: personName ? '#000' : '#ccc'}}>
+              {personName || '请选择'}
+            </Text>
+          </TouchableOpacity>
+
+          <TreePicker
+            visible={open.personList}
+            data={person}
+            change={personChange}
+            setData={setPerson}
+            close={() => setOpen({...open, personList: false})}
           />
         </View>
 
@@ -185,9 +327,7 @@ export function AddInspection() {
               ...styles.btn,
               backgroundColor: '#3B80F0',
             }}
-            onPress={() => {
-              // next();
-            }}>
+            onPress={submit}>
             <Text style={{color: '#FFFFFF'}}>提交</Text>
           </TouchableOpacity>
         </View>
@@ -216,7 +356,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10
+    padding: 10,
   },
   btn: {
     borderRadius: 8,
@@ -228,5 +368,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFF',
     fontSize: 18,
+  },
+  list: {
+    flex: 1,
   },
 });

@@ -9,3 +9,8 @@ export type Inspection = {
   type: number;
   personListVo: {personName: string}[];
 };
+
+export type InspectionType = {
+  id: string;
+  name: string
+}

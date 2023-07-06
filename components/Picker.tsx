@@ -1,48 +1,43 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from 'react-native';
 import React from 'react';
-import {Modal} from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import Divider from './Divider';
 
-interface Props<T> {
+interface Props {
   visible: boolean;
-  data: T[];
-  selectChange: (ids: number[], names?: string) => void;
+  close: () => void;
+  data: {id: string; name: string}[];
+  change: (item: any) => void;
 }
 
-export default function Picker({
-  visible,
-  data,
-  selectChange,
-}: Props<{id: number; name: string; toggleCheckBox: boolean}>) {
-  const change = (index: number) => {
-    const newData = [...data];
-    newData[index].toggleCheckBox = !newData[index].toggleCheckBox;
-    const ids = newData
-      .filter(item => item.toggleCheckBox)
-      .map(item => item.id);
-    const names = newData
-      .filter(item => item.toggleCheckBox)
-      .map(item => item.name)
-      .join(',');
-    selectChange(ids, names);
-  };
-
+export default function Picker({visible, data, close, change}: Props) {
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.overlay}>
         <View style={styles.optionsContainer}>
-          {data?.map((item, index) => (
-            <View key={item.id} style={styles.li}>
-              <CheckBox
-                disabled={false}
-                value={item.toggleCheckBox}
-                onValueChange={() => {
-                  change(index);
-                }}
-              />
-              <Text>{item.name}</Text>
+          <ScrollView>
+            <View style={styles.list}>
+              {data?.map(item => (
+                <View key={item.id}>
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => {
+                      change(item)
+                      close()
+                    }}>
+                    <Text>{item.name}</Text>
+                  </TouchableOpacity>
+                  <Divider />
+                </View>
+              ))}
             </View>
-          ))}
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -54,19 +49,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   optionsContainer: {
     backgroundColor: '#FFF',
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingBottom: 20,
-    width: '90%',
-    height: '90%',
+    width: '100%',
+    height: '50%',
   },
-  li: {
+  list: {
+    flex: 1,
+  },
+  item: {
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });

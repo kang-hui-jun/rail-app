@@ -46,8 +46,7 @@ const RefreshableList = <T extends {id: string | number}>({
     try {
       let status = 0;
       const response = await fetchData(params);
-      console.log(response);
-      
+
       setState({
         ...state,
         total: response.total,
@@ -124,9 +123,7 @@ const RefreshableList = <T extends {id: string | number}>({
           onRefresh={handleRefresh}
         />
       }
-      ListFooterComponent={
-        renderFooter()
-      }
+      ListFooterComponent={renderFooter()}
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
     />

@@ -1,4 +1,4 @@
-import { Params } from '../../types';
+import {Params} from '../../types';
 import {request} from '../../utils/request';
 
 // 分页查询作业
@@ -14,4 +14,11 @@ export const getTaskDetail = <T extends Params>(data: T) => {
 // 结束作业
 export const finishTask = <T extends Params>(data: T) => {
   return request('/InspectionWork/finish', {method: 'post', data});
+};
+
+// 查询巡检类型
+export const getInspectionType = () => {
+  return request('/InspectionType/getAll', {
+    method: 'post',
+  });
 };
