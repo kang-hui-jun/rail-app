@@ -104,7 +104,6 @@ export function AddInspection() {
   };
 
   const personChange = (item: {ids: string[]; names: string}) => {
-    // setForm({...form, personList: item});
     console.log(item);
     setForm({...form, personList: item.ids});
     setPersonName(item.names);
@@ -141,7 +140,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>线路</Text>
           <TouchableOpacity
             style={styles.inp}
@@ -167,7 +166,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>巡检部门</Text>
           <TouchableOpacity
             style={styles.inp}
@@ -204,7 +203,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>巡检类型</Text>
 
           <TouchableOpacity
@@ -232,7 +231,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>巡检日期</Text>
 
           <TouchableOpacity
@@ -272,7 +271,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>负责人</Text>
 
           <TouchableOpacity
@@ -299,7 +298,7 @@ export function AddInspection() {
 
         <Divider />
 
-        <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
+        <View style={{...styles.formItem, }}>
           <Text>巡检人</Text>
 
           <TouchableOpacity
@@ -347,6 +346,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     paddingRight: 10,
+    height: 50,
   },
   inp: {
     flex: 1,

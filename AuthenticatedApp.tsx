@@ -6,7 +6,7 @@ import {Inspection} from './pages/inspection';
 import {Warehouse} from './pages/warehouse';
 import {Emergency} from './pages/emergency';
 import {Detail as InspectionDetail} from './pages/inspection/Detail';
-import {Text, TouchableOpacity} from 'react-native';
+import {Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {AddInspection} from './pages/inspection/AddInspection';
 import {Detail as TaskDetail} from './pages/task/Detail';
 import AddTask from './pages/task/AddTask';
@@ -19,6 +19,7 @@ import Label from './pages/set/Label';
 import Temperature from './pages/set/Temperature';
 import NoticeDetail from './pages/notice/NoticeDetail';
 import MyTask from './pages/my-task';
+import AddEmergency from './pages/emergency/AddEmergency';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +56,10 @@ export const AuthenticatedApp = () => {
                 onPress={() => {
                   navigation.navigate('创建巡检');
                 }}>
-                <Text style={{fontSize: 16}}>新建巡检</Text>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/inspection/add.png')}
+                />
               </TouchableOpacity>
             ),
           })}
@@ -80,7 +84,10 @@ export const AuthenticatedApp = () => {
                 onPress={() => {
                   navigation.navigate('创建作业');
                 }}>
-                <Text style={{fontSize: 16}}>新建作业</Text>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/task/add.png')}
+                />
               </TouchableOpacity>
             ),
           })}
@@ -108,9 +115,27 @@ export const AuthenticatedApp = () => {
           component={Warehouse}
         />
         <Stack.Screen
-          options={{headerTitleAlign: 'center'}}
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('添加应急抢修');
+                }}>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/emergency/add.png')}
+                />
+              </TouchableOpacity>
+            ),
+          })}
           name="应急抢修"
           component={Emergency}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="添加应急抢修"
+          component={AddEmergency}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
@@ -141,3 +166,10 @@ export const AuthenticatedApp = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  img: {
+    width: 30,
+    height: 30,
+  },
+});

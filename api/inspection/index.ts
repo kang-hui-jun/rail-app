@@ -22,3 +22,39 @@ export const getInspectionType = () => {
     method: 'post',
   });
 };
+
+// 新增巡检作业
+export const addInspection = <T extends Params>(data: T) => {
+  return request('/InspectionWork/save', {
+    method: 'post',
+    data,
+  });
+};
+
+// 获取巡检作业详情
+export const getInspectionTaskDetail = <T extends Params>(data: T) => {
+  return request('/InspectionWork/get', {
+    method: 'post',
+    data,
+  });
+};
+
+// 获取巡检计划详情
+export const getInspectionPlanDetail = (id: number) => {
+  return request('/InspectionWork/get/' + id);
+};
+
+// 结束巡检作业
+export const finish = <T extends Params>(data: T) => {
+  return request('/InspectionWork/finish', {
+    method: 'post',
+    data,
+  });
+};
+
+// 获取设备
+export const getInspectionInfo = <T extends Params>(params: T) => {
+  return request('/hard/seperate/getInspectionInfo/1', {
+    params,
+  });
+};

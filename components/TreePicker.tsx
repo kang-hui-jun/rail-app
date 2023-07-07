@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native';
 
 interface Props {
   visible: boolean;
-  data: {name: string; id: string}[];
+  data: {name: string; id: string;}[];
   setData: (data: Props['data']) => void;
   change: (item: {ids: string[]; names: string}) => void;
   close: () => void;
@@ -89,15 +89,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   optionsContainer: {
     backgroundColor: '#FFF',
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingBottom: 20,
-    width: '90%',
-    height: '90%',
+    width: '100%',
+    height: '50%',
   },
   li: {
     height: 50,

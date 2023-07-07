@@ -9,16 +9,17 @@ const apiurl = config.apiUrl;
 interface Config extends RequestInit {
   data?: object;
   params?: object;
+  file?: boolean;
 }
 
 export const request = async (
   endpoint: string,
-  {data, params, ...customConfig}: Config = {},
+  {data, params, file = false, ...customConfig}: Config = {},
 ) => {
   const config = {
     method: 'get',
     headers: {
-      'content-type': 'application/json',
+      'content-type': file ? 'multipart/form-data' : 'application/json',
       Authorization: 'Bearer ' + (await getData()) || '',
     },
     ...customConfig,
