@@ -58,3 +58,10 @@ export const getInspectionInfo = <T extends Params>(params: T) => {
     params,
   });
 };
+
+// 根据条件获取工区
+export const getMetroWorkAreaList = <T extends Params>(params: T) =>
+  request('/metroController/getMetroWorkAreaList', {
+    method: 'post',
+    params,
+  });

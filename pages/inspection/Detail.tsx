@@ -99,7 +99,7 @@ export const Detail = ({route, navigation}) => {
         {active === 0 && <Info detail={detail} />}
         {active === 1 && <Cycle detail={detail} navigation={navigation} />}
         {active === 2 && <Alarm detail={detail} />}
-        {active === 3 && <Disease detail={detail} />}
+        {active === 3 && <Disease detail={detail} navigation={navigation} />}
       </View>
 
       <TouchableOpacity
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     left: 20,
     top: 90,
-    position: 'absolute'
+    position: 'absolute',
   },
   header: {
     flexDirection: 'row',

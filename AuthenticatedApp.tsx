@@ -20,6 +20,7 @@ import Temperature from './pages/set/Temperature';
 import NoticeDetail from './pages/notice/NoticeDetail';
 import MyTask from './pages/my-task';
 import AddEmergency from './pages/emergency/AddEmergency';
+import AddDisease from './pages/inspection/AddDisease';
 
 const Stack = createNativeStackNavigator();
 
@@ -93,6 +94,11 @@ export const AuthenticatedApp = () => {
           })}
           name="作业管理"
           component={Task}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="病害上报"
+          component={AddDisease}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}

@@ -5,11 +5,15 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  NativeEventEmitter,
+  NativeModules,
 } from 'react-native';
 import {Task, Group as G} from '../../../types/task';
 import config from '../../../utils/config';
 import RenderTag from '../../../components/RenderTag';
+import ScanDeviceModule from '../../../ToastExample';
 import GroupCard from '../../task/component/GroupCard';
+import {useEffect} from 'react';
 
 const image = {
   uri: config.apiUrl + '/imgs/task/avatar.png',
@@ -21,6 +25,28 @@ interface Props {
 }
 
 export const Cycle = ({detail, navigation}: Props) => {
+  ScanDeviceModule.initDevice();
+  ScanDeviceModule.open915(
+    33,
+    () => {
+      console.log('成功');
+      ScanDeviceModule.startScan915();
+    },
+    () => {
+      console.log('失败');
+    },
+  );
+  useEffect(() => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.ScanDeviceModule);
+    eventEmitter.addListener('tagEvent', event => {
+      console.log(event);
+    });
+
+    return () => {
+      ScanDeviceModule.close915();
+    };
+  }, []);
+
   const handleDetail = (param: G) => {
     navigation.navigate('小组详情', {
       ...param,
