@@ -53,12 +53,12 @@ export const request = async (
       if (data.code === 200) {
         return data;
       } else {
-        Alert.alert('', data.msg);
+        Alert.alert('', data.msg || "系统未知错误，请反馈给管理员");
         return Promise.reject(data);
       }
     } else {
       const data = await response.json();
-      Alert.alert('', data.msg);
+      Alert.alert('', data.msg || "系统未知错误，请反馈给管理员");
       return Promise.reject({msg: '请求出错'});
     }
   });

@@ -1,3 +1,5 @@
+import { Disease } from "./disease";
+
 export type Inspection = {
   id: number;
   name: string;
@@ -8,6 +10,7 @@ export type Inspection = {
   inspectionAddr: string;
   type: number;
   personListVo: {personName: string}[];
+  diseaseList: Disease[]
 };
 
 export type InspectionType = {

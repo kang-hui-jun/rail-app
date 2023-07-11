@@ -18,7 +18,7 @@ export const Task = ({navigation}) => {
       <TouchableHighlight
         style={styles.card}
         key={item.id}
-        underlayColor="#DDD"
+        underlayColor="white"
         onPress={() => handleDetail({id: item.id, type: item.type})}>
         <View>
           <View style={styles.header}>

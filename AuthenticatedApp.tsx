@@ -21,6 +21,7 @@ import NoticeDetail from './pages/notice/NoticeDetail';
 import MyTask from './pages/my-task';
 import AddEmergency from './pages/emergency/AddEmergency';
 import AddDisease from './pages/inspection/AddDisease';
+import { Inventory } from './pages/task/Inventory';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +110,11 @@ export const AuthenticatedApp = () => {
           options={{headerTitleAlign: 'center'}}
           name="作业详情"
           component={TaskDetail}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="工场清单"
+          component={Inventory}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}

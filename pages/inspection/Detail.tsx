@@ -10,10 +10,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import config from '../../utils/config';
 import {Info} from './component/Info';
 import {Disease} from './component/Disease';
-import SignatureCapture from 'react-native-signature-capture';
 import {Alarm} from './component/Alarm';
 import {Cycle} from './component/Cycle';
-import {getInspectionTaskDetail} from '../../api/inspection';
+import {finishTask, getInspectionTaskDetail} from '../../api/inspection';
+import Signature from '../../components/Signature';
 
 const image = {
   uri: config.apiUrl + '/imgs/inspection/detail.png',
@@ -26,8 +26,7 @@ export const Detail = ({route, navigation}) => {
   const params = route.params;
   const [active, setActive] = useState(0);
   const [detail, setDetail] = useState<any>({});
-  const [modalVisible, setModalVisible] = useState(false);
-  const signRef = useRef(null);
+  const [visible, setVisible] = useState(false);
 
   const getDetail = () => {
     getInspectionTaskDetail(params).then(res => {
@@ -39,21 +38,17 @@ export const Detail = ({route, navigation}) => {
     setActive(index);
   };
 
-  const saveSign = () => {
-    // @ts-ignore
-    signRef.current?.saveImage();
+  const close = () => {
+    setVisible(false);
   };
 
-  const resetSign = () => {
-    // @ts-ignore
-    signRef.current?.resetImage();
-  };
-
-  const _onSaveEvent = (result: any) => {
-    const signatureURI = result.encoded;
-  };
-  const _onDragEvent = () => {
-    console.log('dragged');
+  const getImg = (imgId: string) => {
+    finishTask({
+      inspectionWorkId: detail?.id,
+      signaturePic: imgId,
+    }).then(res => {
+      navigation.goBack();
+    });
   };
 
   useEffect(() => {
@@ -105,56 +100,12 @@ export const Detail = ({route, navigation}) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          setModalVisible(true);
+          setVisible(true);
         }}>
         <Text style={styles.btn}>结束作业</Text>
       </TouchableOpacity>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {}}>
-        <View style={styles.overlay}>
-          <View style={styles.optionsContainer}>
-            <SignatureCapture
-              ref={signRef}
-              style={[{flex: 1}, styles.signature]}
-              onSaveEvent={_onSaveEvent}
-              onDragEvent={_onDragEvent}
-              saveImageFileInExtStorage={false}
-              showNativeButtons={false}
-              showTitleLabel={false}
-              viewMode={'portrait'}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  setModalVisible(false);
-                }}>
-                <Text>取消</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  saveSign();
-                }}>
-                <Text>确定</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  resetSign();
-                }}>
-                <Text>重置</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <Signature visible={visible} close={close} getImg={getImg} />
     </View>
   );
 };

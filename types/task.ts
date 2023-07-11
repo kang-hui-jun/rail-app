@@ -1,3 +1,5 @@
+import { Disease } from "./disease";
+
 export type Person = {
   id: number;
   personId: number;
@@ -10,19 +12,6 @@ export type Group = {
   leaderName: string;
   status: number;
   personList: Person[];
-};
-
-export type Disease = {
-  id: number;
-  diseaseMouldName: string;
-  diseaseLevel: number;
-  status: number;
-  remark: string;
-  lineName: string;
-  lineTypeName: string;
-  travelTypeName: string;
-  workAreaName: string;
-  mileage: string;
 };
 
 export type Task = {

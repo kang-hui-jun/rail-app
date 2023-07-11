@@ -11,11 +11,7 @@ import {CustomPicker} from '../../components/CustomPicker';
 import Divider from '../../components/Divider';
 import {getMetroWorkAreaList} from '../../api/inspection';
 import PhotoList from '../../components/PhotoList';
-
-interface DictType {
-  dictLabel: string;
-  dictValue: string;
-}
+import { DictType } from '../../types/dict';
 
 // @ts-ignore
 export default function AddDisease({route, navigation}) {
@@ -56,9 +52,6 @@ export default function AddDisease({route, navigation}) {
     const travelTypeData = await getDictData('travel_type');
     const lineTypeData = await getDictData('line_type');
     const workAreaData = await getMetroWorkAreaList({metroId: params.lineId});
-
-    console.log(workAreaData);
-
     setTypeList(diseaseTypeData.data);
     seTtravelTypeList(travelTypeData.data);
     setLineTypeList(lineTypeData.data);

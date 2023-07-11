@@ -11,6 +11,10 @@ export const getTaskDetail = <T extends Params>(data: T) => {
   return request('/InspectionWork/get', {method: 'post', data});
 };
 
+// 查询单个巡检的所有告警信息
+export const getOneWorkWarn = (id: number) =>
+  request('/InspectionWork/getOneWorkWarn/' + id);
+
 // 结束作业
 export const finishTask = <T extends Params>(data: T) => {
   return request('/InspectionWork/finish', {method: 'post', data});

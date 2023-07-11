@@ -50,7 +50,9 @@ export const Info = ({detail}: {detail: any}) => {
 
         <Text>巡检人：</Text>
         <Text>
-          {detail.personListVo?.map(item => item.personName).join(', ')}
+          {detail.personListVo
+            ?.map((item: {personName: string}) => item.personName)
+            .join(', ')}
         </Text>
       </View>
       <View style={styles.item}>
@@ -65,14 +67,16 @@ export const Info = ({detail}: {detail: any}) => {
       <View style={styles.item}>
         <Text>巡检项：</Text>
         <View style={styles.item}>
-          {detail.itemListVo?.map(item => (
-            <CheckBox
-              key={item.id}
-              label={item.inspectionItemName}
-              checked={true}
-              onChange={() => {}}
-            />
-          ))}
+          {detail.itemListVo?.map(
+            (item: {id: number; inspectionItemName: string}) => (
+              <CheckBox
+                key={item.id}
+                label={item.inspectionItemName}
+                checked={true}
+                onChange={() => {}}
+              />
+            ),
+          )}
         </View>
       </View>
     </View>
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5
+    gap: 5,
   },
   img: {
     width: 20,

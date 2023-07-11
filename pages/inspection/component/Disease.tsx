@@ -5,11 +5,12 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Task,
 } from 'react-native';
+import Photo from '../../../components/Photo';
+import {Inspection} from '../../../types/inspection';
 
 interface Props {
-  detail: Task;
+  detail: Inspection;
   navigation: any;
 }
 
@@ -24,34 +25,42 @@ export const Disease = ({detail, navigation}: Props) => {
     <View style={styles.page}>
       <ScrollView>
         <View style={{gap: 10}}>
-          {[1, 2, 3, 4].map(item => (
-            <View style={styles.card} key={item}>
+          {detail?.diseaseList.map(item => (
+            <View style={styles.card} key={item.id}>
               <View
                 style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <Image
-                  style={{width: 80, height: 80}}
-                  source={require('../../../assets/home/task.png')}
-                />
+                <Photo photoList={['924']} />
                 <View style={{gap: 10}}>
-                  <Text>病害名称</Text>
-                  <Text>病害具体说明内容信息展示位置字数多…</Text>
+                  <Text>{item.diseaseMouldName}</Text>
+                  <Text>{item.remark}</Text>
                 </View>
               </View>
 
               {/*  */}
               <View
-                style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <Image source={require('../../../assets/home/task.png')} />
-                <Text>九号线</Text>
-                <Text>线别</Text>
-                <Text>行别</Text>
-                <Text>工区</Text>
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                }}>
+                <Image
+                  style={{width: 25, height: 25}}
+                  source={require('../../../assets/emergency/location.png')}
+                />
+                <Text>{item.lineName} |</Text>
+                <Text>{item.lineTypeName} |</Text>
+                <Text>{item.travelTypeName} |</Text>
+                <Text>{item.workAreaName}</Text>
               </View>
 
               <View
                 style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <Image source={require('../../../assets/home/task.png')} />
-                <Text>sk1+521.02</Text>
+                <Image
+                  style={{width: 25, height: 25}}
+                  source={require('../../../assets/inspection/mileage.png')}
+                />
+                <Text>{item.mileage}</Text>
               </View>
             </View>
           ))}
@@ -85,6 +94,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 1,
     shadowRadius: 1.5,
+    gap: 10,
   },
 
   btn: {

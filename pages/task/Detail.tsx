@@ -4,29 +4,27 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Modal,
+  Alert,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {getTaskDetail} from '../../api/task';
+import React, {useEffect, useState} from 'react';
 import config from '../../utils/config';
 import {Info} from './component/Info';
 import {Group} from './component/Group';
-import {Disease} from './component/Disease';
-import SignatureCapture from 'react-native-signature-capture';
+import Divider from '../../components/Divider';
+import {Disease} from './Disease';
+import {finishTask, getTaskDetail, getWorkForFinish} from '../../api/task';
 
 const image = {
   uri: config.apiUrl + '/imgs/inspection/detail.png',
 };
 
-const tabs = ['基本信息', '作业小组', '维养病害']
+const tabs = ['基本信息', '作业小组', '维养病害'];
 
 // @ts-ignore
 export const Detail = ({route, navigation}) => {
   const params = route.params;
   const [active, setActive] = useState(0);
   const [detail, setDetail] = useState<any>({});
-  const [modalVisible, setModalVisible] = useState(false);
-  const signRef = useRef(null);
 
   const getDetail = () => {
     getTaskDetail(params).then(res => {
@@ -38,25 +36,46 @@ export const Detail = ({route, navigation}) => {
     setActive(index);
   };
 
-  const saveSign = () => {
-    signRef.current?.saveImage();
-  };
-
-  const resetSign = () => {
-    signRef.current?.resetImage();
-  };
-
-  const _onSaveEvent = (result: any) => {
-    const signatureURI = result.encoded;
-    
-  };
-  const _onDragEvent = () => {
-    console.log('dragged');
-  };
-
   useEffect(() => {
     getDetail();
   }, []);
+
+  const confirm = () => {
+    finishTask({
+      workId: detail.id,
+    }).then(res => {
+      navigation.navigate('作业管理');
+    });
+  };
+
+  const handleOver = () => {
+    if (detail.status == 11) {
+      getWorkForFinish(detail.id).then(res => {
+        if (res.msg === '没有遗漏的工器具') {
+          confirm();
+        } else {
+          Alert.alert('', res.msg + '，是否结束作业？', [
+            {
+              text: '取消',
+              style: 'cancel',
+            },
+            {
+              text: '确定',
+              onPress: () => {
+                confirm();
+              },
+            },
+          ]);
+        }
+      });
+    }
+  };
+
+  const handleInventory = () => {
+    navigation.navigate('工场清单', {
+      id: detail.id
+    });
+  };
 
   return (
     <View style={styles.page}>
@@ -71,7 +90,7 @@ export const Detail = ({route, navigation}) => {
             </Text>
             <Text style={styles.num}>{detail.num}</Text>
           </View>
-          <View style={styles.divider}></View>
+          <Divider />
           <View style={styles.date}>
             <View style={styles.start}>
               <Text>{detail.createTime}</Text>
@@ -99,62 +118,24 @@ export const Detail = ({route, navigation}) => {
       <View style={{flex: 1, backgroundColor: '#eee', paddingTop: 10}}>
         {active === 0 && <Info detail={detail} />}
         {active === 1 && <Group detail={detail} navigation={navigation} />}
-        {active === 3 && <Disease detail={detail} />}
+        {active === 2 && <Disease navigation={navigation} detail={detail} />}
       </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          setModalVisible(true);
-        }}>
-        <Text style={styles.btn}>结束作业</Text>
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.button} onPress={handleOver}>
+          <Text
+            style={{
+              ...styles.btn,
+              backgroundColor: detail.status !== 11 ? '#c6d1e1' : '#3B80F0',
+            }}>
+            结束作业
+          </Text>
+        </TouchableOpacity>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {}}>
-        <View style={styles.overlay}>
-          <View style={styles.optionsContainer}>
-            <SignatureCapture
-              ref={signRef}
-              style={[{flex: 1}, styles.signature]}
-              onSaveEvent={_onSaveEvent}
-              onDragEvent={_onDragEvent}
-              saveImageFileInExtStorage={false}
-              showNativeButtons={false}
-              showTitleLabel={false}
-              viewMode={'portrait'}
-            />
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  setModalVisible(false)
-                }}>
-                <Text>取消</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  saveSign();
-                }}>
-                <Text>确定</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => {
-                  resetSign();
-                }}>
-                <Text>重置</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        <TouchableOpacity style={styles.button} onPress={handleInventory}>
+          <Text style={styles.btn}>工厂清单</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -204,12 +185,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#3B80F0',
   },
-  divider: {
-    height: 2,
-    backgroundColor: '#F0F1F3',
-    marginTop: 10,
-    marginBottom: 10,
-  },
   date: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -223,53 +198,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60,
   },
-  button: {
+  footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    height: 80,
+    backgroundColor: '#FFF',
+  },
+  button: {
     height: 80,
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopColor: '#000',
+    flex: 1,
   },
   btn: {
     borderRadius: 8,
     padding: 16,
-    width: '90%',
+    width: '100%',
     alignItems: 'center',
     backgroundColor: '#3B80F0',
     justifyContent: 'center',
     textAlign: 'center',
     color: '#FFF',
     fontSize: 18,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  optionsContainer: {
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    width: '80%',
-    height: '80%',
-  },
-  signature: {
-    flex: 1,
-    borderColor: '#000033',
-    borderWidth: 1,
-  },
-  buttonStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    backgroundColor: '#eeeeee',
-    margin: 10,
   },
 });
