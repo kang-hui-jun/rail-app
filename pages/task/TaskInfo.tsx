@@ -5,23 +5,36 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Modal,
-  Alert,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import React, {useState} from 'react';
-import TypeModal, { T } from './TypeModal';
-import { CreateTask } from '../../types/task';
+import React, {useEffect, useState} from 'react';
+import {CreateTask, TaskType} from '../../types/task';
+import {Line, Platform} from '../../types/line';
+import {Dept} from '../../types/dept';
+import {getLine, getMetroPlatform} from '../../api/line';
+import {getDept} from '../../api/dept';
+import {getPerson} from '../../api/person';
+import Divider from '../../components/Divider';
+import {CustomPicker} from '../../components/CustomPicker';
+import {CustomMultiPicker} from '../../components/CustomMultiPicker';
+import {Person} from '../../types/person';
+import {getAllType} from '../../api/task';
+import {treeToArray} from '../../utils';
 
 interface Props {
   setActive: (active: number) => void;
 }
 
 export default function TaskInfo({setActive}: Props) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isDatePicker, setIsDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+
+  const [line, setLine] = useState<Line[]>([]);
+  const [platform, setPlatform] = useState<Platform[]>([]);
+  const [dept, setDept] = useState<Omit<Dept, 'children'>[]>([]);
+  const [person, setPerson] = useState<Person[]>([]);
+  const [typeList, setTypeList] = useState<TaskType[]>([]);
 
   // @ts-ignore
   const onChange = (event, selectedDate) => {
@@ -30,7 +43,7 @@ export default function TaskInfo({setActive}: Props) {
       .split(' ')[0]
       .replace(/\//g, '-');
 
-    setShow(false);
+    setIsDatePicker(false);
     setForm({
       ...form,
       dateTime,
@@ -53,17 +66,45 @@ export default function TaskInfo({setActive}: Props) {
     workContent: '',
   });
 
-  const closeModal = () => {
-    setModalVisible(false);
+  const fetchData = async () => {
+    const line = await getLine();
+    const dept = await getDept();
+    const person = await getPerson();
+    const type = await getAllType();
+
+    setLine(line.data);
+    setDept(treeToArray(dept.data));
+    setPerson(person.data);
+    setTypeList(type.data);
   };
 
-  const confirm = (param: T[]) => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // getMetroPlatform({metroId: form?.lineId})
+
+  const typeChange = () => {};
+
+  const lineChange = async (metroId: string) => {
     setForm({
       ...form,
-      typeList: param
-    })
-    setModalVisible(false)
+      pleaseStand: '',
+      pinStand: '',
+    });
+    const res = await getMetroPlatform({metroId});
+    setPlatform(res.data);
   };
+
+  const pleaseStandChange = (value: string) => {};
+
+  const pinStandChange = (value: string) => {};
+
+  const leaderPersonChange = (value: string) => {};
+
+  const safePersonChange = (value: string) => {};
+
+  const deptChange = (value: string) => {};
 
   const save = () => {
     console.log('保存');
@@ -77,7 +118,7 @@ export default function TaskInfo({setActive}: Props) {
   return (
     <View style={styles.page}>
       <ScrollView>
-        {show && (
+        {isDatePicker && (
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
@@ -98,7 +139,7 @@ export default function TaskInfo({setActive}: Props) {
             value={form.name}
           />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业代码</Text>
@@ -110,38 +151,51 @@ export default function TaskInfo({setActive}: Props) {
             value={form.num}
           />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>作业类型</Text>
 
-          <TouchableOpacity
-            style={{flex: 1}}
-            onPress={() => setModalVisible(true)}>
-            <Text style={{color: '#ccc'}}>
-              {form.typeList.length && form.typeList.map(item => item.type).join(',') || '请选择'}
-            </Text>
-          </TouchableOpacity>
+          <CustomMultiPicker
+            options={typeList.map(item => ({...item, name: item.type}))}
+            placeholder="请选择"
+            onValueChange={typeChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业线路</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={line.map(item => ({
+              id: item.id,
+              name: item.lineName,
+            }))}
+            placeholder="请选择"
+            onValueChange={lineChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>请站点</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={platform}
+            placeholder="请选择"
+            onValueChange={pleaseStandChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>销站点</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={platform}
+            placeholder="请选择"
+            onValueChange={pinStandChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业区域</Text>
@@ -153,28 +207,38 @@ export default function TaskInfo({setActive}: Props) {
             value={form.workAddr}
           />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业负责人</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={person}
+            placeholder="请选择"
+            onValueChange={leaderPersonChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业安全员</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={person}
+            placeholder="请选择"
+            onValueChange={safePersonChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={{...styles.formItem, paddingTop: 15, paddingBottom: 15}}>
           <Text>作业日期</Text>
 
-          <TouchableOpacity style={{flex: 1}} onPress={() => setShow(true)}>
-            <Text style={{color: '#ccc'}}>{form.dateTime || '请选择'}</Text>
+          <TouchableOpacity style={{flex: 1}} onPress={() => {
+            setIsDatePicker(true)
+          }}>
+            <Text style={{color: form.dateTime ? '#000' : '#ccc'}}>{form.dateTime || '请选择'}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业时间</Text>
@@ -186,13 +250,17 @@ export default function TaskInfo({setActive}: Props) {
             value={form.workTime}
           />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业工班</Text>
-          <TextInput style={styles.inp} placeholder="请输入" />
+          <CustomPicker
+            options={dept.map(item => ({id: item.id, name: item.label}))}
+            placeholder="请选择"
+            onValueChange={deptChange}
+          />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
 
         <View style={styles.formItem}>
           <Text>作业内容</Text>
@@ -204,7 +272,7 @@ export default function TaskInfo({setActive}: Props) {
             value={form.workContent}
           />
         </View>
-        <View style={styles.divider}></View>
+        <Divider />
         <View style={styles.button}>
           <TouchableOpacity
             style={{
@@ -229,12 +297,6 @@ export default function TaskInfo({setActive}: Props) {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      <TypeModal
-        modalVisible={modalVisible}
-        closeModal={closeModal}
-        confirm={confirm}
-      />
     </View>
   );
 }
@@ -250,6 +312,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     paddingRight: 10,
+    height: 50,
   },
   inp: {
     flex: 1,

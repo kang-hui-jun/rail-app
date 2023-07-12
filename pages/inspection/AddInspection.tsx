@@ -31,7 +31,6 @@ export function AddInspection() {
   const [dept, setDept] = useState<Omit<Dept, 'children'>[]>([]);
   const [inspectionType, setInspectionType] = useState<InspectionType[]>([]);
   const [person, setPerson] = useState<Person[]>([]);
-  const [personName, setPersonName] = useState('');
 
   const [form, setForm] = useState({
     name: '',

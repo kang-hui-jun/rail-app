@@ -21,7 +21,11 @@ import NoticeDetail from './pages/notice/NoticeDetail';
 import MyTask from './pages/my-task';
 import AddEmergency from './pages/emergency/AddEmergency';
 import AddDisease from './pages/inspection/AddDisease';
-import { Inventory } from './pages/task/Inventory';
+import {Inventory} from './pages/task/Inventory';
+import Distribute from './pages/warehouse/Distribute';
+import Return from './pages/warehouse/Return';
+import Scrap from './pages/warehouse/Scrap';
+import AddDistribute from './pages/warehouse/Distribute/AddDistribute';
 
 const Stack = createNativeStackNavigator();
 
@@ -125,6 +129,44 @@ export const AuthenticatedApp = () => {
           options={{headerTitleAlign: 'center'}}
           name="库存管理"
           component={Warehouse}
+        />
+        <Stack.Screen
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('新增分发');
+                }}>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/warehouse/fenfa/add.png')}
+                />
+              </TouchableOpacity>
+            ),
+          })}
+          name="分发管理"
+          component={Distribute}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="新增分发"
+          component={AddDistribute}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="退换管理"
+          component={Return}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="报废管理"
+          component={Scrap}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="物资盘点"
+          component={Inventory}
         />
         <Stack.Screen
           options={({navigation}) => ({

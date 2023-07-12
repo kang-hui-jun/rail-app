@@ -13,12 +13,13 @@ import {Group} from './component/Group';
 import Divider from '../../components/Divider';
 import {Disease} from './Disease';
 import {finishTask, getTaskDetail, getWorkForFinish} from '../../api/task';
+import { Alarm } from './component/Alarm';
 
 const image = {
   uri: config.apiUrl + '/imgs/inspection/detail.png',
 };
 
-const tabs = ['基本信息', '作业小组', '维养病害'];
+const tabs = ['基本信息', '作业小组', '告警记录', '维养病害'];
 
 // @ts-ignore
 export const Detail = ({route, navigation}) => {
@@ -118,7 +119,8 @@ export const Detail = ({route, navigation}) => {
       <View style={{flex: 1, backgroundColor: '#eee', paddingTop: 10}}>
         {active === 0 && <Info detail={detail} />}
         {active === 1 && <Group detail={detail} navigation={navigation} />}
-        {active === 2 && <Disease navigation={navigation} detail={detail} />}
+        {active === 2 && <Alarm detail={detail} />}
+        {active === 3 && <Disease navigation={navigation} detail={detail} />}
       </View>
 
       <View style={styles.footer}>

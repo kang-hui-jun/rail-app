@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,28 +9,66 @@ import {
   ScrollView,
 } from 'react-native';
 import Divider from '../../components/Divider';
+import {CustomPicker} from '../../components/CustomPicker';
+import {Dept} from '../../types/dept';
+import {Material, Warehouse as W} from '../../types/warehouse';
+import {getMaterialDetail, getWarehouse} from '../../api/warehouse';
+
+const images = {
+  分发管理: require('../../assets/warehouse/fenfa.png'),
+  退换管理: require('../../assets/warehouse/tuihuan.png'),
+  报废管理: require('../../assets/warehouse/baofei.png'),
+  物资盘点: require('../../assets/warehouse/pandian.png'),
+};
+
+const navList: {[key: string]: string}[] = [
+  {title: '分发管理'},
+  {title: '退换管理'},
+  {title: '报废管理'},
+  {title: '物资盘点'},
+];
 
 // @ts-ignore
 export const Warehouse = ({navigation}) => {
-  const images = {
-    分发管理: require('../../assets/warehouse/fenfa.png'),
-    退换管理: require('../../assets/warehouse/tuihuan.png'),
-    报废管理: require('../../assets/warehouse/baofei.png'),
-    物资盘点: require('../../assets/warehouse/pandian.png'),
-  };
+  const [warehouse, setWarehouse] = useState<W[]>([]);
+  const [dept, setDept] = useState<Omit<Dept, 'children'>[]>([]);
+  const [warehouseId, setwarehouseId] = useState<string>();
+  const [material, setMaterial] = useState<Material[]>([]);
 
-  const navList: {[key: string]: string}[] = [
-    {title: '分发管理'},
-    {title: '退换管理'},
-    {title: '报废管理'},
-    {title: '物资盘点'},
-  ];
+  useEffect(() => {
+    getWarehouse().then(res => {
+      setWarehouse(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (warehouseId) {
+      getMaterialDetail(warehouseId).then(res => {
+        setMaterial(res.data);
+      });
+    }
+  }, [warehouseId]);
+
+  const warehouseChange = (value: string) => {
+    setwarehouseId(value);
+  };
 
   return (
     <View style={styles.page}>
       <ImageBackground
         source={require('../../assets/warehouse/bg.png')}
         style={styles.bg}>
+        <View style={styles.dept}>
+          <Image
+            style={styles.select}
+            source={require('../../assets/warehouse/select.png')}
+          />
+          <CustomPicker
+            options={warehouse}
+            placeholder="请选择仓库"
+            onValueChange={warehouseChange}
+          />
+        </View>
         <View style={styles.card}>
           <View style={styles.nav}>
             {navList.map(item => (
@@ -59,15 +97,17 @@ export const Warehouse = ({navigation}) => {
           </View>
 
           <View>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => (
-              <View key={item}>
+            {material.map(item => (
+              <View key={item.id}>
                 <View style={styles.item}>
                   <View style={styles.thing}>
-                    <Text style={{color: '#21254D'}}>十字螺丝刀</Text>
-                    <Text>规格型号：400mm</Text>
+                    <Text style={{color: '#21254D'}}>
+                      {item.materialTypeName}
+                    </Text>
+                    <Text>规格型号：{item.specsModel || '无'}</Text>
                   </View>
                   <View style={styles.count}>
-                    <Text style={{color: '#21254D'}}>45</Text>
+                    <Text style={{color: '#21254D'}}>{item.count || '0'}</Text>
                     <Text>总库存</Text>
                   </View>
                 </View>
@@ -88,6 +128,18 @@ const styles = StyleSheet.create({
   bg: {
     resizeMode: 'cover',
     height: 200,
+  },
+  dept: {
+    position: 'absolute',
+    left: 30,
+    top: 30,
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
+  },
+  select: {
+    width: 30,
+    height: 30,
   },
   card: {
     backgroundColor: '#FFF',
@@ -117,7 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 15
+    marginBottom: 15,
   },
   search: {
     width: 30,

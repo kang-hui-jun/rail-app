@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, Modal, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import {CheckBox} from './CheckBox';
 
 interface Option {
@@ -12,6 +19,7 @@ interface CustomMultiPickerProps {
   defaultValue?: string[];
   placeholder?: string;
   onValueChange?: (values: string[]) => void;
+  isPerson?: boolean;
 }
 
 interface CustomMultiPickerState {
@@ -64,22 +72,28 @@ export class CustomMultiPicker extends React.Component<
   };
 
   render() {
-    const {options, placeholder} = this.props;
+    const {options, placeholder, isPerson} = this.props;
     const {showModal, selectedValues} = this.state;
 
     return (
       <View>
-        <TouchableOpacity onPress={this.toggleModal}>
-          <Text style={{color: selectedValues.length ? '#000' : '#ccc'}}>
-            {selectedValues.length > 0
-              ? selectedValues
-                  .map(value => {
-                    const option = options.find(option => option.id === value);
-                    return option ? option.name : '';
-                  })
-                  .join(', ')
-              : placeholder}
-          </Text>
+        <TouchableOpacity onPress={isPerson ? undefined : this.toggleModal}>
+          {isPerson ? (
+            <Text style={{color: '#ccc'}}>{placeholder}</Text>
+          ) : (
+            <Text style={{color: selectedValues.length ? '#000' : '#ccc'}}>
+              {selectedValues.length > 0
+                ? selectedValues
+                    .map(value => {
+                      const option = options.find(
+                        option => option.id === value,
+                      );
+                      return option ? option.name : '';
+                    })
+                    .join(', ')
+                : placeholder}
+            </Text>
+          )}
         </TouchableOpacity>
 
         <Modal visible={showModal} transparent={true} animationType="fade">
@@ -90,7 +104,12 @@ export class CustomMultiPicker extends React.Component<
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}
             onPress={this.toggleModal}>
-            <View style={{backgroundColor: 'white', maxHeight: 500, minHeight: 100}}>
+            <View
+              style={{
+                backgroundColor: 'white',
+                maxHeight: 500,
+                minHeight: 100,
+              }}>
               <ScrollView>
                 {options.map((option, index) => (
                   <TouchableOpacity
@@ -105,6 +124,11 @@ export class CustomMultiPicker extends React.Component<
                   </TouchableOpacity>
                 ))}
               </ScrollView>
+              <TouchableOpacity
+                style={{padding: 10, alignItems: 'center'}}
+                onPress={this.handleConfirm}>
+                <Text style={styles.btn}>确定</Text>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </Modal>
@@ -112,3 +136,17 @@ export class CustomMultiPicker extends React.Component<
     );
   }
 }
+
+const styles = StyleSheet.create({
+  btn: {
+    borderRadius: 8,
+    padding: 10,
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: '#3B80F0',
+    justifyContent: 'center',
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize: 12,
+  },
+});

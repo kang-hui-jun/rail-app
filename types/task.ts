@@ -7,11 +7,12 @@ export type Person = {
 };
 
 export type Group = {
-  id: number;
+  id: string;
   groupName: string;
   leaderName: string;
   status: number;
   personList: Person[];
+  leader: string;
 };
 
 export type Task = {
@@ -29,7 +30,7 @@ export type Task = {
 };
 
 export type TaskType = {
-  id: number;
+  id: string;
   type: string;
 };
 

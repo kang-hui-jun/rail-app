@@ -13,11 +13,13 @@ interface RefreshableListProps<T> {
     size: number;
   }) => Promise<{data: T[]; total: number}>;
   renderItem: ListRenderItem<T>;
+  p?: any
 }
 
 const RefreshableList = <T extends {id: string | number}>({
   fetchData,
   renderItem,
+  p
 }: RefreshableListProps<T>) => {
   const [data, setData] = useState<T[]>([]); // 列表数据
   const [state, setState] = useState({
@@ -45,7 +47,10 @@ const RefreshableList = <T extends {id: string | number}>({
     // 发送网络请求获取数据
     try {
       let status = 0;
-      const response = await fetchData(params);
+      const response = await fetchData({...params, ...p});
+
+      console.log(response);
+      
 
       setState({
         ...state,
