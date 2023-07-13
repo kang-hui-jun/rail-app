@@ -1,15 +1,16 @@
 import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import React from 'react';
-import {Distribute as D} from '../../../types/warehouse';
+import {Scrap as S} from '../../../types/warehouse';
 import Divider from '../../../components/Divider';
 import RefreshableList from '../../../components/RefreshableList';
-import {getDistribute} from '../../../api/warehouse';
-import { images, renderTag } from './Distributing';
+import {getReturn, getScrap} from '../../../api/warehouse';
+import {renderTag} from './Scraping';
+import Photo from '../../../components/Photo';
 
 export default function History() {
   const handleDetail = () => {};
 
-  const renderItem = ({item}: {item: D}) => {
+  const renderItem = ({item}: {item: S}) => {
     return (
       <TouchableHighlight
         style={styles.card}
@@ -25,22 +26,15 @@ export default function History() {
           <Divider />
 
           <View style={styles.content}>
+            <Photo photoList={['924']} />
             <View>
-              <Text>{item.distributeWarehouseName}</Text>
-              <Text>分发仓库</Text>
-            </View>
-            <Image
-              style={styles.img}
-              source={images[item.status as keyof typeof images]}
-            />
-            <View>
-              <Text>{item.receiveWarehouseName || '暂无'}</Text>
-              <Text>接收仓库</Text>
+              <Text>{item.warehouseName}</Text>
+              {/* <Text>{item.warehouseAddress}</Text> */}
             </View>
           </View>
 
           <View>
-            <Text>发起人：{item.distributeUserName}</Text>
+            <Text>发起人：{item.userName}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -50,7 +44,7 @@ export default function History() {
   return (
     <View style={styles.page}>
       <RefreshableList
-        fetchData={getDistribute}
+        fetchData={getScrap}
         renderItem={renderItem}
         p={{type: 2}}
       />
@@ -80,10 +74,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 10,
+    gap: 10,
   },
   img: {
     height: 50,

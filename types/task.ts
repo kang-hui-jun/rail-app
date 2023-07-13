@@ -1,4 +1,4 @@
-import { Disease } from "./disease";
+import {Disease} from './disease';
 
 export type Person = {
   id: number;
@@ -13,6 +13,7 @@ export type Group = {
   status: number;
   personList: Person[];
   leader: string;
+  groupPersonList?: Person[];
 };
 
 export type Task = {

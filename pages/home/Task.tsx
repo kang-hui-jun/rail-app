@@ -5,15 +5,29 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Divider from '../../components/Divider';
 import {getMyTaskList} from '../../api/home';
+import {Task as T} from '../../types/process';
+
+const type: {[key: string]: string} = {
+  distributeRecord_1: '分发',
+  disease_report: '病害上传',
+  disease_handle: '病害上传',
+  returnRecord: '仓库退换',
+  scrapRecord: '仓库报废',
+};
 
 // @ts-ignore
 export default function Task({navigation}) {
+  const [taskList, setTaskList] = useState<T[]>([]);
   useEffect(() => {
-    getMyTaskList({index: 1, size: 10});
+    getMyTaskList({index: 1, size: 2});
   }, []);
+
+  const handleDetail = (item: T) => {
+    navigation.navigate(type[item.processDefinitionKey]);
+  };
 
   return (
     <View style={styles.task}>
@@ -25,18 +39,18 @@ export default function Task({navigation}) {
       </View>
 
       <View style={{flex: 1}}>
-        {[1, 2, 3].map(item => (
-          <View key={item}>
-            <View style={{flexDirection: 'row', gap: 10}}>
+        {taskList.map(item => (
+          <View key={item.processInstanceId}>
+            <View style={styles.item}>
               <View>
-                <Text style={{color: '#3B80F0'}}>01-14</Text>
-                <Text style={{color: '#9D9FB6'}}>09:45</Text>
+                <Text style={{color: '#3B80F0'}}>{item.taskCreateTime}</Text>
+                <Text style={{color: '#9D9FB6'}}>{item.taskCreateTime}</Text>
               </View>
               <View style={{flex: 1}}>
-                <Text style={{color: '#21254D'}}>巡检计划</Text>
-                <Text style={{color: '#9D9FB6'}}>
-                  有一份巡检计划待执行，巡检时间2022-01-13至2022-01-14
+                <Text style={{color: '#21254D'}}>
+                  {item.processInstanceName}
                 </Text>
+                <Text style={{color: '#9D9FB6'}}>{item.name}</Text>
               </View>
             </View>
             <Divider />
@@ -59,4 +73,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  item: {flexDirection: 'row', gap: 10},
 });

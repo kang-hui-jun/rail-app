@@ -43,3 +43,14 @@ export const getAllType = () =>
   request('/planType/getAll', {
     method: 'post',
   });
+
+// 获取计划信息
+export const getPlanDetail = (id: number) => request('/plan/get/' + id);
+
+// 新增作业
+export const addTask = <T extends Params>(data: T) => {
+  return request('/planWork/save', {
+    method: 'post',
+    data,
+  });
+};

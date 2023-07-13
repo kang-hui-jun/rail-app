@@ -21,11 +21,16 @@ import NoticeDetail from './pages/notice/NoticeDetail';
 import MyTask from './pages/my-task';
 import AddEmergency from './pages/emergency/AddEmergency';
 import AddDisease from './pages/inspection/AddDisease';
-import {Inventory} from './pages/task/Inventory';
+import {Inventory as I} from './pages/task/Inventory';
 import Distribute from './pages/warehouse/Distribute';
 import Return from './pages/warehouse/Return';
 import Scrap from './pages/warehouse/Scrap';
 import AddDistribute from './pages/warehouse/Distribute/AddDistribute';
+import {Execute} from './pages/task/Execute';
+import AddReturn from './pages/warehouse/Return/AddReturn';
+import AddInventory from './pages/warehouse/Inventory/AddInventory';
+import Inventory from './pages/warehouse/Inventory';
+import AddScrap from './pages/warehouse/Scrap/AddScrap';
 
 const Stack = createNativeStackNavigator();
 
@@ -112,13 +117,18 @@ export const AuthenticatedApp = () => {
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
+          name="执行计划"
+          component={Execute}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
           name="作业详情"
           component={TaskDetail}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
           name="工场清单"
-          component={Inventory}
+          component={I}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
@@ -154,19 +164,73 @@ export const AuthenticatedApp = () => {
           component={AddDistribute}
         />
         <Stack.Screen
-          options={{headerTitleAlign: 'center'}}
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('新增退换');
+                }}>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/warehouse/tuihuan/add.png')}
+                />
+              </TouchableOpacity>
+            ),
+          })}
           name="退换管理"
           component={Return}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
+          name="新增退换"
+          component={AddReturn}
+        />
+        <Stack.Screen
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('新增报废');
+                }}>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/warehouse/baofei/add.png')}
+                />
+              </TouchableOpacity>
+            ),
+          })}
           name="报废管理"
           component={Scrap}
         />
         <Stack.Screen
           options={{headerTitleAlign: 'center'}}
+          name="新增报废"
+          component={AddScrap}
+        />
+        <Stack.Screen
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('新增盘点');
+                }}>
+                <Image
+                  style={styles.img}
+                  source={require('./assets/warehouse/pandian/add.png')}
+                />
+              </TouchableOpacity>
+            ),
+          })}
           name="物资盘点"
           component={Inventory}
+        />
+        <Stack.Screen
+          options={{headerTitleAlign: 'center'}}
+          name="新增盘点"
+          component={AddInventory}
         />
         <Stack.Screen
           options={({navigation}) => ({

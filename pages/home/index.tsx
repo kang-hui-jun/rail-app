@@ -8,31 +8,20 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import config from '../../utils/config';
-import Divider from '../../components/Divider';
 import Task from './Task';
 import Alarm from './Alarm';
 
-const image = {
-  uri: config.apiUrl + '/imgs/home/task.png',
+const images = {
+  巡检管理: require('../../assets/home/task.png'),
+  作业管理: require('../../assets/home/inspection.png'),
+  库存管理: require('../../assets/home/inspection.png'),
+  应急抢修: require('../../assets/home/inspection.png'),
 };
+
+const navList = ['巡检管理', '作业管理', '库存管理', '应急抢修'];
 
 // @ts-ignore
 export const Home = ({navigation}) => {
-  const images = {
-    巡检管理: require('../../assets/home/task.png'),
-    作业管理: require('../../assets/home/inspection.png'),
-    库存管理: require('../../assets/home/inspection.png'),
-    应急抢修: require('../../assets/home/inspection.png'),
-  };
-
-  const navList: {[key: string]: string}[] = [
-    {title: '巡检管理'},
-    {title: '作业管理'},
-    {title: '库存管理'},
-    {title: '应急抢修'},
-  ];
-
   return (
     <View style={styles.home}>
       {/* 头部 */}
@@ -41,19 +30,17 @@ export const Home = ({navigation}) => {
           source={require('../../assets/home/home_bg.png')}
           style={styles.bg}>
           <View style={styles.title}>
-            <Text style={{color: '#FFF', fontSize: 22, fontWeight: 'bold'}}>
-              轨行区维养安全管控
-            </Text>
-            <View style={{gap: 10, flexDirection: 'row'}}>
+            <Text style={styles.systemName}>轨行区维养安全管控</Text>
+            <View style={styles.headerRight}>
               <TouchableOpacity onPress={() => navigation.navigate('事务通知')}>
                 <Image
-                  style={{resizeMode: 'cover', width: 30, height: 30}}
+                  style={styles.icon}
                   source={require('../../assets/home/info.png')}
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('设置')}>
                 <Image
-                  style={{resizeMode: 'cover', width: 30, height: 30}}
+                  style={styles.icon}
                   source={require('../../assets/home/set.png')}
                 />
               </TouchableOpacity>
@@ -62,10 +49,10 @@ export const Home = ({navigation}) => {
           <View style={styles.nav}>
             {navList.map(item => (
               <TouchableOpacity
-                key={item.title}
-                onPress={() => navigation.navigate(item.title)}>
-                <Image source={images[item.title as keyof typeof images]} />
-                <Text style={{color: '#FFF'}}>{item.title}</Text>
+                key={item}
+                onPress={() => navigation.navigate(item)}>
+                <Image source={images[item as keyof typeof images]} />
+                <Text style={{color: '#FFF'}}>{item}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -129,6 +116,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  systemName: {color: '#FFF', fontSize: 22, fontWeight: 'bold'},
+  headerRight: {gap: 10, flexDirection: 'row'},
+  icon: {resizeMode: 'cover', width: 30, height: 30},
   nav: {
     justifyContent: 'space-around',
     alignItems: 'center',

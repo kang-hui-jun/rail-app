@@ -1,28 +1,21 @@
 import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import React from 'react';
-import {Distribute as D} from '../../../types/warehouse';
+import {Scrap as S} from '../../../types/warehouse';
 import Divider from '../../../components/Divider';
 import RefreshableList from '../../../components/RefreshableList';
-import {getDistribute} from '../../../api/warehouse';
-
-export const images = {
-  1: require('../../../assets/warehouse/fenfa/5.png'),
-  2: require('../../../assets/warehouse/fenfa/5.png'),
-  3: require('../../../assets/warehouse/fenfa/3.png'),
-  4: require('../../../assets/warehouse/fenfa/5.png'),
-  5: require('../../../assets/warehouse/fenfa/5.png'),
-};
+import {getReturn, getScrap} from '../../../api/warehouse';
+import Photo from '../../../components/Photo';
 
 export const renderTag = (status: number) => {
-  // (1.待出库 2.待确认 3.已完成 4.已驳回 5.已取消)
+  // 1.待审核 2.审核中 3.已完成 4.已驳回 5.已取消
   switch (status) {
     case 1:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#4781E1'}}>待出库</Text>
+        <Text style={{...styles.tag, backgroundColor: '#4781E1'}}>待审核</Text>
       );
     case 2:
       return (
-        <Text style={{...styles.tag, backgroundColor: '#FF8C2B'}}>待确认</Text>
+        <Text style={{...styles.tag, backgroundColor: '#FF8C2B'}}>审核中</Text>
       );
     case 3:
       return (
@@ -42,10 +35,10 @@ export const renderTag = (status: number) => {
   }
 };
 
-export default function Distributing() {
+export default function Reruenting() {
   const handleDetail = () => {};
 
-  const renderItem = ({item}: {item: D}) => {
+  const renderItem = ({item}: {item: S}) => {
     return (
       <TouchableHighlight
         style={styles.card}
@@ -55,28 +48,21 @@ export default function Distributing() {
         <View>
           <View style={styles.header}>
             {renderTag(item.status)}
-            <Text>2022-12-12 14:20:50</Text>
+            <Text>{item.createTime}</Text>
           </View>
 
           <Divider />
 
           <View style={styles.content}>
+            <Photo photoList={['924']} />
             <View>
-              <Text>{item.distributeWarehouseName}</Text>
-              <Text>分发仓库</Text>
-            </View>
-            <Image
-              style={styles.img}
-              source={images[item.status as keyof typeof images]}
-            />
-            <View>
-              <Text>{item.receiveWarehouseName || '暂无'}</Text>
-              <Text>接收仓库</Text>
+              <Text>{item.warehouseName}</Text>
+              {/* <Text>{item.warehouseAddress}</Text> */}
             </View>
           </View>
 
           <View>
-            <Text>发起人：{item.distributeUserName}</Text>
+            <Text>发起人：{item.userName}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -86,7 +72,7 @@ export default function Distributing() {
   return (
     <View style={styles.page}>
       <RefreshableList
-        fetchData={getDistribute}
+        fetchData={getScrap}
         renderItem={renderItem}
         p={{type: 1}}
       />
@@ -116,10 +102,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 10,
+    gap: 10,
   },
   img: {
     height: 50,

@@ -22,8 +22,6 @@ export default function Alarm() {
                     color: '#F93C3C',
                     padding: 10,
                     borderRadius: 50,
-                    // backgroundColor: '#F93C3C',
-                    // opacity: .3,
                   }}>
                   应急救援
                 </Text>

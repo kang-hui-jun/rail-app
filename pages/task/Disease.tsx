@@ -15,7 +15,7 @@ interface Props {
   navigation: any;
 }
 
-const renderTag = (status: number) => {
+export const renderTag = (status: number) => {
   switch (status) {
     case 0:
       return (

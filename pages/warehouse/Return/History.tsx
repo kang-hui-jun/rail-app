@@ -1,51 +1,15 @@
 import {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import React from 'react';
-import {Distribute as D} from '../../../types/warehouse';
+import {Return as R} from '../../../types/warehouse';
 import Divider from '../../../components/Divider';
 import RefreshableList from '../../../components/RefreshableList';
-import {getDistribute} from '../../../api/warehouse';
+import {getReturn} from '../../../api/warehouse';
+import {images, renderTag} from './Returning';
 
-export const images = {
-  1: require('../../../assets/warehouse/fenfa/5.png'),
-  2: require('../../../assets/warehouse/fenfa/5.png'),
-  3: require('../../../assets/warehouse/fenfa/3.png'),
-  4: require('../../../assets/warehouse/fenfa/5.png'),
-  5: require('../../../assets/warehouse/fenfa/5.png'),
-};
-
-export const renderTag = (status: number) => {
-  // (1.待出库 2.待确认 3.已完成 4.已驳回 5.已取消)
-  switch (status) {
-    case 1:
-      return (
-        <Text style={{...styles.tag, backgroundColor: '#4781E1'}}>待出库</Text>
-      );
-    case 2:
-      return (
-        <Text style={{...styles.tag, backgroundColor: '#FF8C2B'}}>待确认</Text>
-      );
-    case 3:
-      return (
-        <Text style={{...styles.tag, backgroundColor: '#0CBC8B'}}>已完成</Text>
-      );
-    case 4:
-      return (
-        <Text style={{...styles.tag, backgroundColor: '#FF4D4F'}}>已驳回</Text>
-      );
-    case 5:
-      return (
-        <Text style={{...styles.tag, backgroundColor: '#C6D1E1'}}>已取消</Text>
-      );
-
-    default:
-      return <Text style={{...styles.tag}}>未知</Text>;
-  }
-};
-
-export default function Distributing() {
+export default function History() {
   const handleDetail = () => {};
 
-  const renderItem = ({item}: {item: D}) => {
+  const renderItem = ({item}: {item: R}) => {
     return (
       <TouchableHighlight
         style={styles.card}
@@ -55,14 +19,14 @@ export default function Distributing() {
         <View>
           <View style={styles.header}>
             {renderTag(item.status)}
-            <Text>2022-12-12 14:20:50</Text>
+            <Text>{item.createTime}</Text>
           </View>
 
           <Divider />
 
           <View style={styles.content}>
             <View>
-              <Text>{item.distributeWarehouseName}</Text>
+              <Text>{item.returnWarehouseName}</Text>
               <Text>分发仓库</Text>
             </View>
             <Image
@@ -76,7 +40,7 @@ export default function Distributing() {
           </View>
 
           <View>
-            <Text>发起人：{item.distributeUserName}</Text>
+            <Text>发起人：{item.userName}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -86,9 +50,9 @@ export default function Distributing() {
   return (
     <View style={styles.page}>
       <RefreshableList
-        fetchData={getDistribute}
+        fetchData={getReturn}
         renderItem={renderItem}
-        p={{type: 1}}
+        p={{type: 2}}
       />
     </View>
   );

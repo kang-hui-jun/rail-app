@@ -5,12 +5,35 @@ import RenderTag from '../../components/RenderTag';
 import RefreshableList from '../../components/RefreshableList';
 import Divider from '../../components/Divider';
 
+interface Param {
+  id: number;
+  type: number;
+  status?: number;
+  active?: boolean
+}
+
 // @ts-ignore
 export const Task = ({navigation}) => {
-  const handleDetail = (param: {id: number; type: number}) => {
-    navigation.navigate('作业详情', {
-      ...param,
-    });
+  const navigateTo = (name: string, param: Param) => {
+    navigation.navigate(name, param);
+  };
+
+  const handleDetail = (param: Param) => {
+    console.log(param);
+
+    if (param.type === 1) {
+      navigateTo('执行计划', param);
+    } else {
+      if (param.type === 2) {
+        if (param.status === 10) {
+          navigateTo('创建作业', {...param, active: true});
+        } else {
+          navigateTo('作业详情', param);
+        }
+      } else {
+        navigateTo('作业详情', param);
+      }
+    }
   };
 
   const renderItem = ({item}: {item: DataType}) => {
@@ -19,7 +42,7 @@ export const Task = ({navigation}) => {
         style={styles.card}
         key={item.id}
         underlayColor="white"
-        onPress={() => handleDetail({id: item.id, type: item.type})}>
+        onPress={() => handleDetail(item)}>
         <View>
           <View style={styles.header}>
             <Text style={styles.title}>{item.name}</Text>

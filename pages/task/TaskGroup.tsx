@@ -20,6 +20,7 @@ export default function TaskGroup() {
   const [groupList, setGroupList] = useState<Omit<Group, 'id' | 'status'>[]>(
     [],
   );
+  const [groupIndex, setGroupIndex] = useState(0);
 
   useEffect(() => {
     getPerson().then(res => {
@@ -38,6 +39,11 @@ export default function TaskGroup() {
       ...groupList,
       {leader: '', groupName: '', leaderName: '', personList: []},
     ]);
+  };
+
+  const addPerson = (index: number) => {
+    setGroupIndex(index);
+    personRef?.current?.toggleModal();
   };
 
   const onSelectChange = (ids: string[]) => {
@@ -62,14 +68,12 @@ export default function TaskGroup() {
     }
 
     const newGroupList = [...groupList];
-    newGroupList.splice(0, 1, {
-      ...groupList[0],
+    newGroupList.splice(groupIndex, 1, {
+      ...groupList[groupIndex],
       personList: result,
-      leader: result[0].id,
+      leader: result[groupIndex].id,
     });
 
-    console.log(result);
-    
     setGroupList(newGroupList);
   };
 
@@ -92,7 +96,7 @@ export default function TaskGroup() {
               <View style={styles.person}>
                 <TouchableOpacity
                   style={styles.addPerson}
-                  onPress={() => personRef?.current?.toggleModal()}>
+                  onPress={() => addPerson(index)}>
                   <Image
                     style={styles.img}
                     source={require('../../assets/task/add-person.png')}
